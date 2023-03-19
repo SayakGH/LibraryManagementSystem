@@ -1,72 +1,182 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-public class Library 
-{
-    public static void main(String[] args) {
-    
-        Books bks = new Books();
-        Borower borower = new Borower();
-        
-        String brname="",date="";
-        int i=0;
-        while(i==0)
-        { 
-            
-            System.out.println("\nEnter your choice: ");
-            System.out.println("1.Issue a Book");
-            System.out.println("2.Add new book to library");
-            System.out.println("3.Check borrower data");
-            System.out.println("4.return");
-            System.out.println("Enter a random Integer to exit");
-            Scanner sc= new Scanner(System.in);
-            int n = sc.nextInt();
-            
-            if(n==1){
-                brname=sc.nextLine();
-                System.out.println("Enter Borrower name:");
-                brname=sc.nextLine();
-                System.out.println("Enter book name:");
-                String bookname=sc.nextLine();
-                System.out.println("Enter date in 00/00/0000 format");
-                date=sc.nextLine();
-                System.out.println(borower.Issue(bookname, brname, date));
-            }
-            else if(n==2){
-                System.out.println("Enter a new book name");
-                String bkname=sc.nextLine();
-                // bkname=sc.nextLine();
-                boolean b =bks.checkBook(bkname);
-                if (b==(false))
-                bks.addNewBook(bkname);
-            }
 
-            else if(n==3){
-                System.out.println("Enter Borrower name:");
-                brname=sc.nextLine();
-                brname=sc.nextLine();
-                String userData =borower.checkBorower(brname);
-                System.out.println(userData);
-                
+public class Library extends JFrame implements ActionListener {
+
+    private JLabel borrowerLabel, bookLabel, dateLabel;
+    private JTextField borrowerTextField, bookTextField, dateTextField;
+    private JButton issueButton, addButton, checkButton, returnButton;
+
+    public Library() {
+        setTitle("Library Management System");
+        setSize(400, 300);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        borrowerLabel = new JLabel("Borrower Name:");
+        borrowerLabel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JLabel label = (JLabel) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(),Font.PLAIN,fontSize));
             }
-            else if(n==4)
-            {
-                brname=sc.nextLine();
-                System.out.println("Enter borower name:");
-                brname=sc.nextLine();
-                System.out.println(borower.Return(brname));
+        });
+        borrowerTextField = new JTextField(20);
+        borrowerTextField.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JTextField label = (JTextField) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
             }
-            else
-            i=1;
-              
-        }
-            
+        });
+
+        bookLabel = new JLabel("Book Name:");
+        bookLabel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JLabel label = (JLabel) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
+            }
+        });
+        bookTextField = new JTextField(20);
+        bookTextField.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JTextField label = (JTextField) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
+            }
+        });
+
+        dateLabel = new JLabel("Date (dd/mm/yyyy):");
+        dateLabel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JLabel label = (JLabel) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.1); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
+            }
+        });
+        dateTextField = new JTextField(10);
+        dateTextField.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JTextField label = (JTextField) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
+            }
+        });
+
+        issueButton = new JButton("Issue");
+        issueButton.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton label = (JButton) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
+            }
+        });
+        issueButton.addActionListener(this);
+
+        addButton = new JButton("Add Book");
+        addButton.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton label = (JButton) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
+            }
+        });
+        addButton.addActionListener(this);
+
+        checkButton = new JButton("Check Borrower");
+        checkButton.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton label = (JButton) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
+            }
+        });
+        checkButton.addActionListener(this);
+
+        returnButton = new JButton("Return Book");
+        returnButton.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton label = (JButton) e.getComponent();
+                int fontSize = (int) (label.getWidth() * 0.08); // adjust the multiplier to fit your needs
+                label.setFont(new Font(label.getFont().getName(), Font.PLAIN, fontSize));
+            }
+        });
+        returnButton.addActionListener(this);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 1));
+        panel.add(borrowerLabel);
+        panel.add(borrowerTextField);
+        panel.add(bookLabel);
+        panel.add(bookTextField);
+        panel.add(dateLabel);
+        panel.add(dateTextField);
+        panel.add(issueButton);
+        panel.add(addButton);
+        panel.add(checkButton);
+        panel.add(returnButton);
+
+        add(panel);
+
+        setVisible(true);
     }
 
-}
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == issueButton) {
+            String borrowerName = borrowerTextField.getText();
+            String bookName = bookTextField.getText();
+            String date = dateTextField.getText();
 
+            Books bks = new Books();
+            Borower borower = new Borower();
+
+            JOptionPane.showMessageDialog(this, borower.Issue(bookName, borrowerName, date));
+        } else if (e.getSource() == addButton) {
+            String bookName = bookTextField.getText();
+
+            Books bks = new Books();
+
+            if (!bks.checkBook(bookName)) {
+                bks.addNewBook(bookName);
+                JOptionPane.showMessageDialog(this, "Book Successfully Added");
+            } else {
+                JOptionPane.showMessageDialog(this, "Book Already Exists");
+            }
+        } else if (e.getSource() == checkButton) {
+            String borrowerName = borrowerTextField.getText();
+
+            Borower borower = new Borower();
+
+            JOptionPane.showMessageDialog(this, borower.checkBorower(borrowerName));
+        } else if (e.getSource() == returnButton) {
+            String borrowerName = borrowerTextField.getText();
+
+            Borower borower = new Borower();
+
+            JOptionPane.showMessageDialog(this, borower.Return(borrowerName));
+        }
+    }
+
+    public static void main(String[] args) {
+        new Library();
+    }
+}
 class Books
 {
     Books()
